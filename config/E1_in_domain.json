@@ -1,0 +1,21 @@
+{
+  "stage": "E1",
+  "description": "Three in-domain evaluations on native numeric features",
+  "scenarios": [
+    "E1_2017",
+    "E1_2018",
+    "E1_IoT"
+  ],
+  "models": [
+    "xgboost",
+    "random_forest",
+    "logistic_regression"
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "group": "seven",
+  "jobs": 4
+}

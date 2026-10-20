@@ -1,0 +1,12 @@
+{
+  "stage": "E7",
+  "source": "2018",
+  "method": "weighted",
+  "k_per_class": 50,
+  "seed": 42,
+  "model": "xgboost",
+  "group": "seven",
+  "holdout_fraction": 0.4,
+  "alpha": 0.5,
+  "jobs": 4
+}

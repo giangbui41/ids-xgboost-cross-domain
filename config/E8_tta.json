@@ -1,0 +1,17 @@
+{
+  "stage": "E8",
+  "description": "Optional transductive evaluation: holdout features used by TTA, labels only for scoring",
+  "selection_metric": "total_cost",
+  "sources": ["2018"], "group": "seven", "seeds": [42, 43, 44], "jobs": 4,
+  "holdout_fraction": 0.4, "k_per_class": [50], "alpha": 0.5,
+  "costs": {"fp": 100, "fn": 1},
+  "threshold": {"strategy": "budget_validation_cost", "calibration_fraction": 0.3},
+  "model_params": {"n_estimators": 200, "max_depth": 3, "learning_rate": 0.05, "min_child_weight": 1, "reg_lambda": 5},
+  "self_training": {"iterations": 3, "confidence": 0.95, "pseudo_weight": 0.2, "max_per_class": 1000},
+  "explanations": {"enabled": true, "max_samples": 256},
+  "variants": [
+    {"name": "weighted_no_tta", "method": "weighted", "feature_engineering": true},
+    {"name": "weighted_tta_entropy", "method": "weighted", "feature_engineering": true, "tta": "entropy"},
+    {"name": "weighted_tta_self_training", "method": "weighted", "feature_engineering": true, "tta": "self_training"}
+  ]
+}

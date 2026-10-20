@@ -1,0 +1,28 @@
+{
+  "config_sha256": "8988b3a54ac7c05a5bc9459eaa42d00a27d06ffe2b7e127f3305dee2e21a0176",
+  "code_sha256": {
+    "__init__.py": "9382531882a0954370e1ac2b31fb82f5208b460ed333e05f1a87a7cbbf76e615",
+    "adaptation.py": "42c6ffbf30f27ff1302231b71e670b1c359aff64e561f80954334061af45fe13",
+    "calibration.py": "eac12eeb034742ce734dd57109835640351ced0a4a7d34b4c9ac2d3b75d77b2a",
+    "cli.py": "cc76d27471b1717e58e40a08c1b09ef645d806c02b77bf8722dee07198659110",
+    "data.py": "551b14b0b412972340ff8754765a7f4638bf5452ea04036c7bbb7208cad859b7",
+    "experiment.py": "45c9ad43ba139e8fcd169c2c934f856af52c95c929b918503d8cbb5048f3c153",
+    "explanations.py": "11bcaa23cb0b196dfcd1d2716789523f98689a98c56425a68e0f95627059d5e7",
+    "features.py": "6aeffa79b256e996053d4e8ae931cbc29a7a78435c391ab4c2b2c82a30030d46",
+    "fewshot.py": "768029c411261f9815949d99a6c9e8c96709128669820a8367970e9172f81905",
+    "hybrid.py": "dde18ffe9b0c16dbcb4eaebddf517745b47b2ebc3c2f4e2c8f2480be6e1d76f4",
+    "improvements.py": "15f61398b8a3e66c0a98caea352bb47b3dc40bf485ce066506e837b53a9bb025",
+    "matrix.py": "8ce68eec3d0ce363102b5a5dfef24840bc3a1baea1abc979de649a713513c29b",
+    "pipeline.py": "9ce8ce3bf6b1dc43a3100b70206d289f254e644ce993ff4033c06a2adf3617eb",
+    "prepare.py": "fd06d47eff670f8ddf2b28ab1c2e834af915688000c955fe98e8680e240f6b5b",
+    "robustness.py": "d4116cb4848a732f308b17b1994c5fcadce8523af1c185a1b4d307609e0a1f4f",
+    "semisupervised.py": "511ebfb881b36163f211ae824fc074128d68f62c4740bcfbc97cbda585f82b96"
+  },
+  "inputs_sha256": {
+    "2018": "e07ef3ed90e014506b7428675e36f2132024220ceb00209ca3c32b0bf066f58b",
+    "iot": "8635c074400f641c2aa850ba158704ece7490f03ee3c1950851eb9a75b2682b5",
+    "feature_mapping": "466700e5572459a1039c7375b5e8ab3191da20b808e03d26fc9565965bec5fae"
+  },
+  "locked_utc": "2026-10-06T03:21:42.468767+00:00",
+  "reason": "Evaluate a fixed legacy baseline: source 2018, weighted XGBoost, K=50 per class. Retain default alpha=0.5; fix seed=42 without selecting the best-performing seed. E5 is reported as sensitivity analysis, not holdout tuning. This is not a FINAL evaluation of improved E4 or E8."
+}

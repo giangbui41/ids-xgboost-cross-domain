@@ -1,0 +1,18 @@
+{
+  "mapping_version": "seven-feature-candidate-v1",
+  "caveat": "Mappings are hypotheses. Numeric checks cannot verify matching extraction semantics across CICFlowMeter and CICIoT2023.",
+  "features": {
+    "flow_packets_per_second": {"2017": "Flow_Packets/s", "2018": "Flow Pkts/s", "iot": "Rate"},
+    "forward_packets_per_second": {"2017": "Fwd_Packets/s", "2018": "Fwd Pkts/s", "iot": "Srate"},
+    "backward_packets_per_second": {"2017": "Bwd_Packets/s", "2018": "Bwd Pkts/s", "iot": "Drate"},
+    "packet_length_min": {"2017": "Min_Packet_Length", "2018": "Pkt Len Min", "iot": "Min"},
+    "packet_length_mean": {"2017": "Packet_Length_Mean", "2018": "Pkt Len Mean", "iot": "AVG"},
+    "packet_length_max": {"2017": "Max_Packet_Length", "2018": "Pkt Len Max", "iot": "Max"},
+    "packet_length_std": {"2017": "Packet_Length_Std", "2018": "Pkt Len Std", "iot": "Std"}
+  },
+  "groups": {
+    "seven": ["flow_packets_per_second", "forward_packets_per_second", "backward_packets_per_second", "packet_length_min", "packet_length_mean", "packet_length_max", "packet_length_std"],
+    "without_backward": ["flow_packets_per_second", "forward_packets_per_second", "packet_length_min", "packet_length_mean", "packet_length_max", "packet_length_std"],
+    "length_only": ["packet_length_min", "packet_length_mean", "packet_length_max", "packet_length_std"]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "stage": "E4",
+  "description": "Integration smoke on real DEV; capped source/unlabeled pools, one seed",
+  "selection_metric": "total_cost",
+  "sources": ["2018"], "group": "seven", "model": "xgboost", "seeds": [42], "jobs": 2,
+  "holdout_fraction": 0.4, "k_per_class": [10], "alpha": 0.5,
+  "feature_engineering": true, "compare_raw": true, "use_tta": false,
+  "methods": ["source_only", "target_only", "pooled", "weighted", "weighted_adaptive", "self_training"],
+  "max_source_samples": 4000, "max_unlabeled_samples": 4000,
+  "model_params": {"n_estimators": 30, "max_depth": 3, "learning_rate": 0.1, "reg_lambda": 5},
+  "costs": {"fp": 100, "fn": 1}, "threshold": {"strategy": "fixed", "value": 0.5},
+  "calibration": {"enabled": true, "method": "sigmoid", "fraction": 0.3, "n_bins": 10},
+  "adaptive": {"strategy": "uncertainty"},
+  "self_training": {"iterations": 2, "confidence": 0.95, "pseudo_weight": 0.2, "max_per_class": 100},
+  "explanations": {"enabled": true, "max_samples": 32}
+}

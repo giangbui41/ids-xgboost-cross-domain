@@ -1,0 +1,29 @@
+{
+  "stage": "E6",
+  "description": "Feature measurement drift stress test for few-shot methods; not FGSM/PGD",
+  "sources": [
+    "2018"
+  ],
+  "group": "seven",
+  "model": "xgboost",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "holdout_fraction": 0.4,
+  "k_per_class": 50,
+  "methods": [
+    "source_only",
+    "target_only",
+    "pooled",
+    "weighted"
+  ],
+  "alpha": 0.5,
+  "epsilons": [
+    0.05,
+    0.1,
+    0.2
+  ],
+  "jobs": 4
+}

@@ -1,0 +1,20 @@
+{
+  "stage": "E3",
+  "description": "Zero-shot enterprise-to-IoT DEV diagnosis",
+  "scenarios": [
+    "E3_17toIoT",
+    "E3_18toIoT"
+  ],
+  "models": [
+    "xgboost",
+    "random_forest",
+    "logistic_regression"
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "group": "seven",
+  "jobs": 4
+}

@@ -1,0 +1,41 @@
+{
+  "stage": "E4",
+  "description": "Integration guide: engineered features, cost, SHAP, adaptive weighting, SSL and probability calibration",
+  "selection_metric": "total_cost",
+  "feature_engineering": false,
+  "compare_raw": true,
+  "use_tta": false,
+  "costs": {"fp": 100, "fn": 1},
+  "threshold": {"strategy": "fixed", "value": 0.5},
+  "calibration": {"enabled": true, "method": "sigmoid", "fraction": 0.3, "n_bins": 10},
+  "explanations": {"enabled": true, "max_samples": 256},
+  "adaptive": {"strategy": "uncertainty", "min_weight": 0.1, "max_weight": 10},
+  "self_training": {"iterations": 3, "confidence": 0.95, "pseudo_weight": 0.2, "max_per_class": 1000},
+  "sources": [
+    "2017",
+    "2018"
+  ],
+  "group": "seven",
+  "model": "xgboost",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "holdout_fraction": 0.4,
+  "k_per_class": [
+    10,
+    50,
+    200
+  ],
+  "methods": [
+    "source_only",
+    "target_only",
+    "pooled",
+    "weighted",
+    "weighted_adaptive",
+    "self_training"
+  ],
+  "alpha": 0.5,
+  "jobs": 4
+}

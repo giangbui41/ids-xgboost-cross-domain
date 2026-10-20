@@ -1,0 +1,28 @@
+{
+  "stage": "E8",
+  "description": "Cost-sensitive ablations; full 60% DEV adaptation pool minus budgeted labels",
+  "selection_metric": "total_cost",
+  "sources": ["2017", "2018"],
+  "group": "seven",
+  "seeds": [42, 43, 44],
+  "jobs": 4,
+  "holdout_fraction": 0.4,
+  "k_per_class": [10, 50, 200],
+  "alpha": 0.5,
+  "costs": {"fp": 100, "fn": 1},
+  "threshold": {"strategy": "fixed", "value": 0.5},
+  "model_params": {"n_estimators": 200, "max_depth": 3, "learning_rate": 0.05, "min_child_weight": 1, "reg_lambda": 5},
+  "adaptive": {"strategy": "density", "min_weight": 0.1, "max_weight": 10},
+  "self_training": {"iterations": 3, "confidence": 0.95, "pseudo_weight": 0.2, "max_per_class": 1000},
+  "explanations": {"enabled": true, "max_samples": 256},
+  "variants": [
+    {"name": "source_only", "method": "source_only", "feature_engineering": false},
+    {"name": "target_only", "method": "target_only", "feature_engineering": false},
+    {"name": "pooled", "method": "pooled", "feature_engineering": false},
+    {"name": "weighted_raw", "method": "weighted", "feature_engineering": false},
+    {"name": "weighted_features", "method": "weighted", "feature_engineering": true},
+    {"name": "adaptive_features", "method": "adaptive", "feature_engineering": true},
+    {"name": "ssl_features", "method": "self_training", "feature_engineering": true},
+    {"name": "ssl_adaptive_features", "method": "self_training", "feature_engineering": true, "adaptive_weighting": true}
+  ]
+}

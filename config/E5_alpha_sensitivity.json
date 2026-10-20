@@ -1,0 +1,23 @@
+{
+  "stage": "E5",
+  "description": "Sensitivity to predeclared target-domain weight alpha",
+  "sources": [
+    "2018"
+  ],
+  "group": "seven",
+  "model": "xgboost",
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "holdout_fraction": 0.4,
+  "k_per_class": 50,
+  "alphas": [
+    0.1,
+    0.25,
+    0.5,
+    0.75
+  ],
+  "jobs": 4
+}

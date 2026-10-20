@@ -1,0 +1,12 @@
+{
+  "stage": "E4",
+  "description": "Optional entropy TTA comparison; target holdout features participate in adaptation",
+  "selection_metric": "total_cost",
+  "sources": ["2018"], "group": "seven", "model": "xgboost", "seeds": [42, 43, 44], "jobs": 4,
+  "holdout_fraction": 0.4, "k_per_class": [50], "alpha": 0.5,
+  "feature_engineering": true, "compare_raw": false,
+  "methods": ["weighted"], "use_tta": true, "tta_method": "entropy",
+  "costs": {"fp": 100, "fn": 1},
+  "threshold": {"strategy": "budget_validation_cost", "calibration_fraction": 0.3},
+  "explanations": {"enabled": true, "max_samples": 256}
+}

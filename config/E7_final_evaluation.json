@@ -1,0 +1,12 @@
+{
+  "stage": "E7",
+  "source": "UNSET",
+  "method": "UNSET",
+  "k_per_class": null,
+  "seed": null,
+  "model": "UNSET",
+  "group": "seven",
+  "holdout_fraction": 0.4,
+  "alpha": 0.5,
+  "jobs": 4
+}

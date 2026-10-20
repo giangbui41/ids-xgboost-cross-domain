@@ -1,0 +1,20 @@
+{
+  "stage": "E2",
+  "description": "Related-domain bidirectional transfer",
+  "scenarios": [
+    "E2_17to18",
+    "E2_18to17"
+  ],
+  "models": [
+    "xgboost",
+    "random_forest",
+    "logistic_regression"
+  ],
+  "seeds": [
+    42,
+    43,
+    44
+  ],
+  "group": "seven",
+  "jobs": 4
+}

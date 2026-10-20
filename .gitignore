@@ -1,0 +1,8 @@
+data/
+runs/
+results/
+results_colab/
+*.egg-info/
+__pycache__/
+.venv/
+.pytest_cache/

@@ -1,0 +1,20 @@
+{
+  "stage": "E8",
+  "description": "Small development smoke run; capped training pools, not research evidence",
+  "selection_metric": "total_cost",
+  "sources": ["2018"], "group": "seven", "seeds": [42], "jobs": 2,
+  "holdout_fraction": 0.4, "k_per_class": [10], "alpha": 0.5,
+  "max_source_samples": 4000, "max_unlabeled_samples": 4000,
+  "costs": {"fp": 100, "fn": 1},
+  "threshold": {"strategy": "fixed", "value": 0.5},
+  "model_params": {"n_estimators": 30, "max_depth": 3, "learning_rate": 0.1, "reg_lambda": 5},
+  "self_training": {"iterations": 2, "confidence": 0.9, "pseudo_weight": 0.2, "max_per_class": 100},
+  "explanations": {"enabled": true, "max_samples": 32},
+  "variants": [
+    {"name": "target_only", "method": "target_only", "feature_engineering": false},
+    {"name": "weighted_raw", "method": "weighted", "feature_engineering": false},
+    {"name": "weighted_features", "method": "weighted", "feature_engineering": true},
+    {"name": "adaptive_features", "method": "adaptive", "feature_engineering": true},
+    {"name": "ssl_features", "method": "self_training", "feature_engineering": true}
+  ]
+}
