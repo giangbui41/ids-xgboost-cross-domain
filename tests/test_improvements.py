@@ -104,7 +104,7 @@ def test_e8_pipeline_artifacts_and_tta_roles(tmp_path):
     assert set(summary.loc[summary.tta != "none", "evaluation_role"]) == {"transductive_holdout"}
     assert (summary.total_cost == 100 * summary.fp + summary.fn).all()
     manifest = json.loads((run / "manifest.json").read_text())
-    assert "iot_final" not in manifest["inputs_sha256"]
+    assert "iot_supplementary" not in manifest["inputs_sha256"]
     assert any("predictions.npz" in key for key in manifest["artifact_sha256"])
     details = json.loads((run / "ssl_2018_s42_k4" / "run.json").read_text())
     assert details["target_labels_used"] == 8

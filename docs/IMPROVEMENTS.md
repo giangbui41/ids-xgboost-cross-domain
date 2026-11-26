@@ -2,7 +2,7 @@
 
 E8 là thí nghiệm phát triển trên IoT DEV. Không có cam kết tăng F1 2–10% hoặc hybrid luôn tốt nhất. Metric chính là `total_cost = 100 * FP + FN`, càng thấp càng tốt. Macro-F1, AUROC, AUPRC, FPR/FNR vẫn được lưu để nhìn thấy đánh đổi. Chi phí 100/1 là giả định của người làm thí nghiệm, chưa được xác thực bằng chi phí vận hành thực tế.
 
-Từ bản 0.4.0, E4 mặc định dùng chung runner cải tiến với E8; xem [tích hợp E4](INTEGRATION_STATUS.md). Cấu hình E4 cũ không có `feature_engineering`, E1–E3 và E5–E7 giữ cách huấn luyện cũ. **E7 hiện chỉ hỗ trợ các phương pháp cũ; chưa dùng E7 để đánh giá model E4 cải tiến/E8.** Khi cần đánh giá các mô hình này trên FINAL, phải thiết kế và khóa giao thức riêng trước. E4/E8 không đọc file FINAL.
+Từ bản 0.4.0, E4 mặc định dùng chung runner cải tiến với E8; xem [tích hợp E4](INTEGRATION_STATUS.md). Cấu hình E4 cũ không có `feature_engineering`, E1–E3 và E5–E7 giữ cách huấn luyện cũ. **E7 hiện chỉ hỗ trợ các phương pháp cũ; chưa dùng E7 để đánh giá model E4 cải tiến/E8.** Khi cần đánh giá các mô hình này trên SUPPLEMENTARY, phải thiết kế và khóa giao thức riêng trước. E4/E8 không đọc file SUPPLEMENTARY.
 
 ## Chạy
 

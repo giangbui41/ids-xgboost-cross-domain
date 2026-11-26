@@ -14,10 +14,12 @@ Mã có config/script đánh số E0–E7 và tạo CSV theo phiên bản để 
 data/processed/cicids2017_balanced_77feats.csv
 data/processed/cleaned_data_sampled.csv
 data/processed/ciciot2023_dev.csv
-data/processed/ciciot2023_final_test.csv
+data/processed/ciciot2023_supplementary_test.csv   # trước gọi là final_test.csv
 ```
 
 Ba file đầu là đầu vào E0–E6. File `ciciot2023_final_test.csv` **không được các script E0–E6 đọc**. Bản 2017 đã cân bằng, 2018 đã làm sạch/lấy mẫu, và IoT DEV là mẫu 5%; ghi đúng xuất xứ này trong báo cáo, đừng gọi chúng là CSV thô.
+
+**⚠️ QUAN TRỌNG:** Tập `ciciot2023_final_test.csv` được gọi là **SUPPLEMENTARY** (bổ sung) trong toàn bộ mã nguồn và báo cáo, **không phải** FINAL holdout độc lập. Xem mục "Giao thức E7 & SUPPLEMENTARY" dưới đây.
 
 ```powershell
 py -3.12 -m venv .venv
@@ -41,7 +43,7 @@ Mỗi script đọc config cùng số trong `config/`. Các config E1–E6 mặc
 | **E4** | **K nhãn/lớp IoT; đặc trưng mới, adaptive/SSL, calibration và đối chứng** | `scripts/E4_fewshot.py`, `config/E4_fewshot.json` |
 | E5 | Độ nhạy của trọng số dữ liệu IoT `alpha` | `scripts/E5_alpha_sensitivity.py`, `config/E5_alpha_sensitivity.json` |
 | E6 | Kiểm tra dịch chuyển phép đo trên các phương pháp E4 | `scripts/E6_measurement_drift.py`, `config/E6_measurement_drift.json` |
-| E7 | Một lần đánh giá cấu hình đã chọn trên IoT FINAL | `scripts/E7_final.py`, `config/E7_final_evaluation.json` |
+| E7 | Một lần đánh giá cấu hình đã chọn trên IoT SUPPLEMENTARY | `scripts/E7_final.py`, `config/E7_final_evaluation.json` |
 
 ```powershell
 python scripts/E0_data_audit.py --data-dir data/processed
@@ -53,16 +55,22 @@ python scripts/E5_alpha_sensitivity.py --data-dir data/processed
 python scripts/E6_measurement_drift.py --data-dir data/processed
 ```
 
-E7 không nằm trong chuỗi lệnh trên. **E7 hiện chỉ hỗ trợ giao thức cũ: đặc trưng gốc và bốn phương pháp gốc. Không dùng E7 hiện tại để báo cáo FINAL cho E4 cải tiến hoặc E8.** Hướng dẫn khóa dưới đây chỉ áp dụng cho giao thức cũ. Khi chốt cấu hình cũ, **sao chép** `config/E7_final_evaluation.json` sang `config/E7_final_evaluation_locked.json`, ghi rõ `source`, `method`, `k_per_class`, `seed`, `model` và `alpha` nếu dùng weighted. Lưu lại lý do lựa chọn trước khi chạy:
+E7 không nằm trong chuỗi lệnh trên. **E7 hiện chỉ hỗ trợ giao thức cũ: đặc trưng gốc và bốn phương pháp gốc. Không dùng E7 hiện tại để báo cáo SUPPLEMENTARY cho E4 cải tiến hoặc E8.** Hướng dẫn khóa dưới đây chỉ áp dụng cho giao thức cũ. Khi chốt cấu hình cũ, **sao chép** `config/E7_final_evaluation.json` sang `config/E7_final_evaluation_locked.json`, ghi rõ `source`, `method`, `k_per_class`, `seed`, `model` và `alpha` nếu dùng weighted. Lưu lại lý do lựa chọn trước khi chạy:
 
 ```powershell
 python -m ids_xgb.pipeline lock-final --config config/E7_final_evaluation_locked.json --data-dir data/processed --reason "Ghi ly do lua chon tu E4/E5 tai day"
 python scripts/E7_final.py --config config/E7_final_evaluation_locked.json --data-dir data/processed
 ```
 
-Config gốc để `UNSET` nên chạy trực tiếp sẽ báo lỗi. `lock-final` ghi file `.lock.json` cạnh config, chứa lý do chọn và hash của config, mã nguồn, ánh xạ, nguồn được chọn và IoT DEV; lệnh này không đọc FINAL. E7 kiểm tra các hash trước khi mở FINAL. Với `source_only`, đặt `k_per_class=0`.
+Config gốc để `UNSET` nên chạy trực tiếp sẽ báo lỗi. `lock-final` ghi file `.lock.json` cạnh config, chứa lý do chọn và hash của config, mã nguồn, ánh xạ, nguồn được chọn và IoT DEV; lệnh này không đọc SUPPLEMENTARY. E7 kiểm tra các hash trước khi mở SUPPLEMENTARY. Với `source_only`, đặt `k_per_class=0`.
 
-E7 dùng các nhãn IoT DEV được chọn theo seed để huấn luyện rồi đánh giá trên IoT FINAL; kết quả ghi vào `results/current/E7.csv`. Trước mỗi lần thử, chương trình tạo file `.final_evaluation_<sha256>.json` cạnh dữ liệu. E7 và lệnh cũ `evaluate-final` dùng chung dấu vết này, nên đổi thư mục kết quả không cho phép đánh giá lại. Dấu vết được giữ cả khi lần chạy lỗi: cần kiểm tra nguyên nhân và lưu lịch sử xử lý, không tự động xóa để chạy lại. Đây là biện pháp ngăn chạy lặp ngoài ý muốn trong cùng thư mục dữ liệu, không chống việc cố ý xóa dấu vết hoặc sao chép dữ liệu sang nơi khác. FINAL từng được nghiên cứu ở đồ án trước, vì thế đây là tập đánh giá bổ sung có lịch sử đã nhìn thấy, không phải kiểm định độc lập hoàn toàn.
+E7 dùng các nhãn IoT DEV được chọn theo seed để huấn luyện rồi đánh giá trên IoT SUPPLEMENTARY; kết quả ghi vào `results/current/E7.csv`. Trước mỗi lần thử, chương trình tạo file `.final_evaluation_<sha256>.json` cạnh dữ liệu. E7 và lệnh cũ `evaluate-final` dùng chung dấu vết này, nên đổi thư mục kết quả không cho phép đánh giá lại. Dấu vết được giữ cả khi lần chạy lỗi: cần kiểm tra nguyên nhân và lưu lịch sử xử lý, không tự động xóa để chạy lại. Đây là biện pháp ngăn chạy lặp ngoài ý muốn trong cùng thư mục dữ liệu, **không chống việc cố ý xóa dấu vết hoặc sao chép dữ liệu sang nơi khác**.
+
+**⚠️ QUAN TRỌNG — IoT SUPPLEMENTARY KHÔNG PHẢI HOLDOUT ĐỘC LẬP:**
+- Tập `ciciot2023_final_test.csv` (gọi là **SUPPLEMENTARY**) **đã được nghiên cứu trong đồ án trước**.
+- Việc khóa E7 chỉ ngăn chặn *chạy lặp trong cùng thư mục*; nó **không** loại bỏ data snooping gián tiếp từ kiến thức đồ án cũ.
+- Kết quả E7 chỉ mang tính **bổ sung/tham khảo**, **không phải kiểm định độc lập hoàn toàn**.
+- Muốn kết luận mạnh hơn: cần tập dữ liệu đích **hoàn toàn mới** (thiết bị/khung thời gian/loại tấn công khác) được tạo **trước** khi bắt đầu nghiên cứu này.
 
 Có thể chạy riêng một script. Để chạy nhanh trước, **sao chép** config sang file mới, đổi `seeds` thành `[42]`, E4 đổi `sources` thành `["2018"]` và `k_per_class` thành `[10]`, rồi truyền `--config config/E4_fewshot_smoke.json`. Mỗi lần chạy tạo kết quả mới, không ghi đè snapshot cũ. Không sửa config sau khi chạy và coi đó là cùng một thí nghiệm; mỗi lần chạy lưu bản config riêng.
 
@@ -123,10 +131,13 @@ Khi tạo một bộ IoT mới bằng `prepare-iot`, có thể thêm `--deduplic
 
 ## Tài liệu, giới hạn và bước báo cáo
 
-- `config/feature_mapping.json` ghi 7 ánh xạ **ứng viên** giữa CICFlowMeter và CICIoT2023. Số liệu nhất quán không chứng minh chúng cùng ý nghĩa; `Drate` gần như toàn số 0 ở IoT DEV. Cần đối chiếu mã trích xuất/định nghĩa trước khi tuyên bố chuyển miền hợp lệ.
+- `config/feature_mapping.json` ghi 7 ánh xạ **ứng viên** giữa CICFlowMeter và CICIoT2023. Số liệu nhất quán không chứng minh chúng cùng ý nghĩa; `Drate` gần như toàn số 0 ở IoT DEV. **Chạy `python -m ids_xgb.validate_mapping` để kiểm tra phân phối trước khi tuyên bố chuyển miền hợp lệ.**
 - Tỷ lệ attack trên IoT DEV khoảng 97,65%. AUPRC cao cần được so với mốc prevalence; FPR và số cảnh báo sai trên benign rất quan trọng.
-- IoT DEV và bản FINAL đã được dùng trong đồ án cũ. Giữ FINAL ngoài E0–E6 ngăn thêm việc chọn mô hình theo nó, nhưng không biến nó thành tập độc lập hoàn toàn mới. Muốn kết luận mạnh hơn cần một tập dữ liệu đích mới hoặc holdout theo thiết bị/thời gian được tạo trước nghiên cứu.
-- `weighted` hiện là một giả thuyết thực nghiệm đơn giản, không phải thuật toán mới đã được xác nhận. Nếu `target_only` thắng, phải báo cáo trung thực và phân tích khi nào dữ liệu nguồn gây hại.
+- **IoT DEV và bản SUPPLEMENTARY (`ciciot2023_final_test.csv`) đã được dùng trong đồ án cũ.** Giữ SUPPLEMENTARY ngoài E0–E6 ngăn thêm việc chọn mô hình theo nó, nhưng không biến nó thành tập độc lập hoàn toàn mới. Kết quả E7 chỉ mang tính bổ sung/tham khảo. Muốn kết luận mạnh hơn cần một tập dữ liệu đích **hoàn toàn mới** (thiết bị/khung thời gian/loại tấn công khác) được tạo **trước** khi bắt đầu nghiên cứu này.
+- **Split ngẫu nhiên theo nhãn (stratified) — KHÔNG độc lập theo thiết bị/phiên/thời gian.** Cùng một phiên tấn công có thể rơi vào cả train và holdout → metrics có thể bị thổi phồng. Các báo cáo `overlap_report` trong JSON kết quả **không chứng minh** độc lập theo thiết bị/phiên. CSV hiện tại thiếu metadata `device_id`/`session_id`/`timestamp` để split đúng chuẩn.
+- `weighted` hiện là một giả thuyết thực nghiệm đơn giản, không phải thuật toán mới đã được xác nhận. Nếu `target_only` thắng, phải báo cáo trung thực và phân tích khi nào dữ liệu nguồn gây hại (negative transfer).
+- **Self-training / Entropy TTA là transductive (dùng nhãn holdout gián tiếp).** Không so sánh công bố với các phương pháp inductive (`source_only`, `weighted`, v.v.). Chỉ so sánh giữa các biến thể transductive.
+- **Calibration `weighted_calibrated` dùng 30% K cho fitting sigmoid.** Ở K=10, chỉ còn 7 nhãn/lớp train cây — so sánh không cùng ngân sách train hiệu quả.
 - Chạy tối thiểu ba seed và báo cáo trung bình/độ lệch, đồ thị theo K, ablation nhóm đặc trưng, chi phí huấn luyện/suy luận; chỉ so DANN cũ khi dữ liệu, split, đặc trưng, ngưỡng và cách đo tương thích.
 
 Nếu muốn dùng CSV chính thức thay đầu vào đã xử lý, mã `prepare-source`/`prepare-iot` trong `ids_xgb.cli` có thể tạo một bộ dữ liệu **mới**; không trộn chúng với CSV cũ trong một bảng. Trang phát hành: [2017](https://www.unb.ca/cic/datasets/ids-2017.html), [2018](https://www.unb.ca/cic/datasets/ids-2018.html), [IoT2023](https://www.unb.ca/cic/datasets/iotdataset-2023.html). Bản IoT Kaggle đã được đối chiếu với protocol pool cũ là [himadri07/ciciot2023](https://www.kaggle.com/datasets/himadri07/ciciot2023).

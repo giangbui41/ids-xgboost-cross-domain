@@ -1,4 +1,4 @@
-"""E7: one evaluation on IoT FINAL using a configuration fixed before this run."""
+"""E7: one evaluation on IoT SUPPLEMENTARY using a configuration fixed before this run."""
 from pathlib import Path
 import sys
 

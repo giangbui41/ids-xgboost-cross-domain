@@ -1,4 +1,4 @@
-"""Command line interface. No command automatically evaluates FINAL_TEST."""
+"""Command line interface. No command automatically evaluates SUPPLEMENTARY_TEST."""
 from __future__ import annotations
 
 import argparse
@@ -66,10 +66,10 @@ def main(argv: list[str] | None = None) -> None:
     p.add_argument("--seed", type=int, default=20260819)
     p.add_argument("--mapping", type=Path, default=DEFAULT_MAPPING)
 
-    p2 = sub.add_parser("prepare-iot", help="Sample IoT CSVs and make a new DEV/FINAL split")
+    p2 = sub.add_parser("prepare-iot", help="Sample IoT CSVs and make a new DEV/SUPPLEMENTARY split")
     p2.add_argument("--raw-dir", type=Path, required=True)
     p2.add_argument("--dev-output", type=Path, required=True)
-    p2.add_argument("--final-output", type=Path, required=True)
+    p2.add_argument("--supplementary-output", type=Path, required=True)
     p2.add_argument("--sample-frac", type=float, default=0.05)
     p2.add_argument("--seed", type=int, default=20260819)
     p2.add_argument("--mapping", type=Path, default=DEFAULT_MAPPING)
@@ -99,13 +99,13 @@ def main(argv: list[str] | None = None) -> None:
     e.add_argument("--mapping", type=Path, default=DEFAULT_MAPPING)
     e.add_argument("--output", type=Path, required=True)
 
-    f = sub.add_parser("freeze", help="Lock one selected model before FINAL evaluation")
+    f = sub.add_parser("freeze", help="Lock one selected model before SUPPLEMENTARY evaluation")
     f.add_argument("--run", type=Path, required=True)
     f.add_argument("--out", type=Path, required=True)
 
-    z = sub.add_parser("evaluate-final", help="One locked evaluation on untouched IoT FINAL_TEST")
+    z = sub.add_parser("evaluate-final", help="One locked evaluation on untouched IoT SUPPLEMENTARY_TEST")
     z.add_argument("--frozen", type=Path, required=True)
-    z.add_argument("--iot-final", type=Path, required=True)
+    z.add_argument("--iot-supplementary", type=Path, required=True)
     z.add_argument("--mapping", type=Path, default=DEFAULT_MAPPING)
     z.add_argument("--output", type=Path, required=True)
 
@@ -144,7 +144,7 @@ def main(argv: list[str] | None = None) -> None:
         result = prepare_source(args.raw_dir, args.output, args.mapping,
                                 args.domain, args.sample_frac, args.seed)
     elif args.command == "prepare-iot":
-        result = prepare_iot(args.raw_dir, args.dev_output, args.final_output,
+        result = prepare_iot(args.raw_dir, args.dev_output, args.supplementary_output,
                              args.mapping, args.sample_frac, args.seed, deduplicate=args.deduplicate)
     elif args.command == "audit":
         result = audit(args.mapping, args.source_2017, args.source_2018,
@@ -197,7 +197,7 @@ def main(argv: list[str] | None = None) -> None:
         result = {"rows": run_drift(args.run, args.iot_dev, args.mapping,
                                     args.epsilons, args.output)}
     else:
-        result = evaluate(args.frozen, args.iot_final, args.mapping, "final", args.output)
+        result = evaluate(args.frozen, args.iot_supplementary, args.mapping, "final", args.output)
     print(json.dumps(result, ensure_ascii=False, indent=2))
 
 

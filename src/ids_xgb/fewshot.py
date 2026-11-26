@@ -1,4 +1,4 @@
-"""Budgeted, labeled-target adaptation. IoT FINAL_TEST is never opened here."""
+"""Budgeted, labeled-target adaptation. IoT SUPPLEMENTARY_TEST is never opened here."""
 from __future__ import annotations
 
 from dataclasses import dataclass

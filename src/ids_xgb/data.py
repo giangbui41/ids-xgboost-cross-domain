@@ -89,11 +89,16 @@ def sha256(path: Path) -> str:
 
 
 def claim_final_evaluation(target_csv: Path, record: dict) -> Path:
-    """Reserve one FINAL attempt across both CLI entry points and result folders."""
+    """Reserve one SUPPLEMENTARY evaluation attempt across both CLI entry points and result folders.
+
+    Note: This is a procedural guard against repeated runs in the same directory.
+    It does NOT prevent data snooping from prior knowledge of this dataset.
+    The dataset `ciciot2023_supplementary_test.csv` was studied in a previous project.
+    """
     path = target_csv.parent / (".final_evaluation_" + sha256(target_csv) + ".json")
     try:
         with path.open("x", encoding="utf-8") as stream:
             json.dump({**record, "status": "attempted"}, stream, indent=2)
     except FileExistsError as exc:
-        raise ValueError("FINAL evaluation already attempted for this dataset; review its audit record") from exc
+        raise ValueError("SUPPLEMENTARY evaluation already attempted for this dataset; review its audit record") from exc
     return path

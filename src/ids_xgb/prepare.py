@@ -133,11 +133,11 @@ def prepare_source(raw_dir: Path, output: Path, mapping_path: Path,
     return report
 
 
-def prepare_iot(raw_dir: Path, dev_output: Path, final_output: Path,
+def prepare_iot(raw_dir: Path, dev_output: Path, supplementary_output: Path,
                 mapping_path: Path, fraction: float, seed: int, *, deduplicate: bool = False) -> dict:
-    if dev_output.resolve() == final_output.resolve():
-        raise ValueError("DEV and FINAL output paths must differ")
-    if dev_output.exists() or final_output.exists():
+    if dev_output.resolve() == supplementary_output.resolve():
+        raise ValueError("DEV and SUPPLEMENTARY output paths must differ")
+    if dev_output.exists() or supplementary_output.exists():
         raise FileExistsError("Refusing to overwrite existing IoT split")
     files = sorted(raw_dir.rglob("*.csv"))
     if not files:
@@ -157,16 +157,16 @@ def prepare_iot(raw_dir: Path, dev_output: Path, final_output: Path,
     dev_idx, final_idx = train_test_split(index, test_size=0.20,
                                           stratify=pool["Label"], random_state=seed)
     dev_output.parent.mkdir(parents=True, exist_ok=True)
-    final_output.parent.mkdir(parents=True, exist_ok=True)
+    supplementary_output.parent.mkdir(parents=True, exist_ok=True)
     pool.iloc[dev_idx].reset_index(drop=True).to_csv(dev_output, index=False)
-    pool.iloc[final_idx].reset_index(drop=True).to_csv(final_output, index=False)
+    pool.iloc[final_idx].reset_index(drop=True).to_csv(supplementary_output, index=False)
     report = {"domain": "iot", "source_rows": len(pool), "sampled_rows": sampled_rows,
               "duplicate_feature_vectors": duplicate_vectors, "deduplicated": deduplicate,
               "rows_removed": sampled_rows - len(pool), "dev_rows": len(dev_idx),
-              "final_rows": len(final_idx), "dev_attack_prevalence": float(pool.Label.iloc[dev_idx].mean()),
-              "final_attack_prevalence": float(pool.Label.iloc[final_idx].mean()),
+              "supplementary_rows": len(final_idx), "dev_attack_prevalence": float(pool.Label.iloc[dev_idx].mean()),
+              "supplementary_attack_prevalence": float(pool.Label.iloc[final_idx].mean()),
               "sample_frac_per_chunk": fraction, "seed": seed, "files": files_info,
-              "dev_sha256": sha256(dev_output), "final_sha256": sha256(final_output),
-              "note": "Random stratified split after sampling across raw CSVs. It is not an independent device/time holdout. Never select models on FINAL."}
+              "dev_sha256": sha256(dev_output), "supplementary_sha256": sha256(supplementary_output),
+              "note": "Random stratified split after sampling across raw CSVs. It is not an independent device/time holdout. Never select models on SUPPLEMENTARY."}
     save_json(dev_output.parent / "iot_split_manifest.json", report)
     return report

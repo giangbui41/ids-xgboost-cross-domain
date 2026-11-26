@@ -166,15 +166,15 @@ def test_stage_end_to_end_on_synthetic_data(tmp_path, stage):
     run_id = run_stage(stage, path, data, results, MAPPING)
     assert not pd.read_csv(results / "current" / f"{stage}.csv").empty
     manifest = json.loads((results / "runs" / run_id / "manifest.json").read_text())
-    assert "iot_final" not in manifest["inputs_sha256"]
+    assert "iot_supplementary" not in manifest["inputs_sha256"]
     if stage == "E4":
         selected = final_config()
         selected_path = tmp_path / "selected.json"
         selected_path.write_text(json.dumps(selected))
-        # A synthetic FINAL, never the project's real evaluation dataset.
+        # A synthetic SUPPLEMENTARY, never the project's real evaluation dataset.
         final_frame = frame.copy()
         final_frame.iloc[:, :-1] += .25
-        final_frame.to_csv(data / DATA_FILES["iot_final"], index=False)
+        final_frame.to_csv(data / DATA_FILES["iot_supplementary"], index=False)
         lock_final(selected_path, data, MAPPING, "Synthetic integration test")
         run_stage("E7", selected_path, data, results, MAPPING)
         with pytest.raises(ValueError, match="already attempted"):

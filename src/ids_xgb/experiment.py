@@ -225,7 +225,7 @@ def evaluate(model_dir: Path, target_csv: Path, mapping_path: Path,
         "model_sha256": sha256(model_dir / filename),
         "target_sha256": sha256(target_csv),
         "metrics": metrics(y, score, metadata["threshold"], metadata["source_validation_margin_for_90pct_acceptance"]),
-        "note": "DEV is diagnostic. FINAL must be evaluated only after decisions and model are frozen. Abstention is exploratory and has no cross-domain guarantee.",
+        "note": "DEV is diagnostic. SUPPLEMENTARY must be evaluated only after decisions and model are frozen. Abstention is exploratory and has no cross-domain guarantee.",
     }
     output_json.parent.mkdir(parents=True, exist_ok=True)
     save_json(output_json, result)

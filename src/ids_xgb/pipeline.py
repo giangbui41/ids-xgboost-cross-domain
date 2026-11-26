@@ -65,7 +65,7 @@ def _input_hashes(data_dir: Path, stage: str, mapping: Path, config: dict,
     elif stage == "E7":
         required = {config["source"], "iot"}
         if include_final:
-            required.add("iot_final")
+            required.add("iot_supplementary")
     else:
         required = {*config.get("sources", ["2018"]), "iot"}
     return {**{domain: sha256(data_dir / DATA_FILES[domain]) for domain in required},
@@ -92,7 +92,7 @@ def _exclusive_registry(results_dir: Path):
 
 
 def lock_final(config_path: Path, data_dir: Path, mapping: Path, reason: str) -> Path:
-    """Record a selection without opening FINAL. Existing locks are immutable."""
+    """Record a selection without opening SUPPLEMENTARY. Existing locks are immutable."""
     config = json.loads(config_path.read_text(encoding="utf-8"))
     _validate_config("E7", config, mapping)
     if not reason.strip():
@@ -109,7 +109,7 @@ def lock_final(config_path: Path, data_dir: Path, mapping: Path, reason: str) ->
 def _verify_final_lock(config_path: Path, data_dir: Path, mapping: Path, config: dict) -> dict:
     path = config_path.with_suffix(".lock.json")
     if not path.is_file():
-        raise ValueError("E7 requires a lock-final record before FINAL can be read")
+        raise ValueError("E7 requires a lock-final record before SUPPLEMENTARY can be read")
     lock = json.loads(path.read_text(encoding="utf-8"))
     if json.loads(config_path.read_text(encoding="utf-8")) != config:
         raise ValueError("E7 config changed while being read")
@@ -241,7 +241,7 @@ def _produce(stage: str, config: dict, data_dir: Path, mapping: Path, work: Path
         model, medians, picked = fit_fewshot(data, config["k_per_class"],
                                              config["method"], config.get("alpha", .5),
                                              config["model"], config.get("jobs", 4))
-        final_x, final_y = load_features(data_dir / DATA_FILES["iot_final"],
+        final_x, final_y = load_features(data_dir / DATA_FILES["iot_supplementary"],
                                          load_mapping(mapping), group, "iot")
         scores = model.predict_proba(final_x.fillna(medians).to_numpy("float32"))[:, 1]
         m = metrics(final_y, scores, .5)
@@ -367,7 +367,7 @@ def run_stage(stage: str, config_path: Path, data_dir: Path, results_dir: Path,
     inputs = _input_hashes(data_dir, stage, mapping, config)
     code_hashes = _code_hashes()
     if final_lock is not None and (code_hashes != final_lock["code_sha256"] or
-            {k: v for k, v in inputs.items() if k != "iot_final"} != final_lock["inputs_sha256"]):
+            {k: v for k, v in inputs.items() if k != "iot_supplementary"} != final_lock["inputs_sha256"]):
         raise ValueError("E7 inputs or code changed after lock verification")
     results_dir.mkdir(parents=True, exist_ok=True)
     runs_dir = results_dir / "runs"
@@ -376,7 +376,7 @@ def run_stage(stage: str, config_path: Path, data_dir: Path, results_dir: Path,
     if stage == "E7":
         # Stored beside the dataset so changing results-dir does not reset it.
         # Keep attempted runs too: a failure may happen after predictions exist.
-        claim_final_evaluation(data_dir / DATA_FILES["iot_final"],
+        claim_final_evaluation(data_dir / DATA_FILES["iot_supplementary"],
                                {"run_id": run_id, "results_dir": str(results_dir.resolve()),
                                 "selection": final_lock})
     work = Path(tempfile.mkdtemp(prefix=f".running_{stage}_", dir=runs_dir))
@@ -400,7 +400,7 @@ def run_stage(stage: str, config_path: Path, data_dir: Path, results_dir: Path,
                                                    for p in ("numpy", "pandas", "scikit-learn", "xgboost")},
                 "selection_metric": config.get("selection_metric", "total_cost" if stage == "E8" else "macro_f1"),
                 "artifact_sha256": {str(p.relative_to(work)): sha256(p) for p in sorted(work.rglob("*")) if p.is_file()},
-                "protocol_note": "E0-E6 and E8 never read IoT FINAL_TEST. E8 marks TTA as transductive. E7 requires a locked preselected config; prior research has already examined related data."}
+                "protocol_note": "E0-E6 and E8 never read IoT SUPPLEMENTARY_TEST. E8 marks TTA as transductive. E7 requires a locked preselected config; prior research has already examined related data."}
     if stage == "E8" and any(v["method"] == "hybrid" for v in config["variants"]):
         manifest["versions"]["torch"] = importlib.metadata.version("torch")
     (work / "manifest.json").write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
@@ -424,7 +424,7 @@ def main(argv=None):
     run.add_argument("--mapping", type=Path, default=ROOT / "config" / "feature_mapping.json")
     listing = sub.add_parser("list")
     listing.add_argument("--results-dir", type=Path, default=ROOT / "results")
-    locking = sub.add_parser("lock-final", help="Record E7 selection without reading FINAL")
+    locking = sub.add_parser("lock-final", help="Record E7 selection without reading SUPPLEMENTARY")
     locking.add_argument("--config", type=Path, required=True)
     locking.add_argument("--data-dir", type=Path, required=True)
     locking.add_argument("--mapping", type=Path, default=ROOT / "config" / "feature_mapping.json")

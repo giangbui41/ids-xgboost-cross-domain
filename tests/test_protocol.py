@@ -73,10 +73,10 @@ def test_prepare_iot_creates_disjoint_split(tmp_path):
                           for n in mapping["groups"]["seven"]})
     frame["Label"] = ["Benign"] * 10 + ["DDoS"] * 10
     frame.to_csv(raw / "part.csv", index=False)
-    dev, final = tmp_path / "dev.csv", tmp_path / "final.csv"
-    report = prepare_iot(raw, dev, final, MAPPING, 1.0, 42)
-    assert (report["dev_rows"], report["final_rows"]) == (16, 4)
-    assert set(pd.read_csv(dev)["Rate"]).isdisjoint(set(pd.read_csv(final)["Rate"]))
+    dev, supplementary = tmp_path / "dev.csv", tmp_path / "supplementary.csv"
+    report = prepare_iot(raw, dev, supplementary, MAPPING, 1.0, 42)
+    assert (report["dev_rows"], report["supplementary_rows"]) == (16, 4)
+    assert set(pd.read_csv(dev)["Rate"]).isdisjoint(set(pd.read_csv(supplementary)["Rate"]))
 
 
 def test_final_evaluation_requires_frozen_model_before_reading_target(tmp_path):

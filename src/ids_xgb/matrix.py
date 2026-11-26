@@ -17,7 +17,7 @@ DATA_FILES = {
     "2017": "cicids2017_balanced_77feats.csv",
     "2018": "cleaned_data_sampled.csv",
     "iot": "ciciot2023_dev.csv",
-    "iot_final": "ciciot2023_final_test.csv",
+    "iot_supplementary": "ciciot2023_supplementary_test.csv",
 }
 SCENARIOS = {
     "E1_2017": ("in_domain", "2017", "2017"),
@@ -173,7 +173,7 @@ def run_one(name: str, model_type: str, data_dir: Path, mapping_path: Path,
         "evaluation": metrics(yte, model.predict_proba(c)[:, 1], threshold, margin),
         "evaluation_role": "internal_source_test" if mode == "in_domain" else "cross_domain_diagnostic",
         "target_labels_in_training_or_threshold": mode == "in_domain",
-        "note": "These experiments do not replicate old E1-E4 architectures, splits, or target adaptation. IoT FINAL is never read.",
+        "note": "These experiments do not replicate old E1-E4 architectures, splits, or target adaptation. IoT SUPPLEMENTARY is never read.",
     }
     return result
 

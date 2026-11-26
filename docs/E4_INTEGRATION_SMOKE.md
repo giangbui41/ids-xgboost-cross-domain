@@ -1,6 +1,6 @@
 # Kiểm tra tích hợp E4 0.4.0
 
-Đã chạy `python -m pytest -q`: **98 passed**. Đã chạy E0 trước E4 trên bộ dữ liệu đang có; không chạy E7 hoặc đọc IoT FINAL. Đã sao lưu kết quả E0 vào `results.backup_before_E4_0.4.0` trước khi chạy E4.
+Đã chạy `python -m pytest -q`: **98 passed**. Đã chạy E0 trước E4 trên bộ dữ liệu đang có; không chạy E7 hoặc đọc IoT SUPPLEMENTARY. Đã sao lưu kết quả E0 vào `results.backup_before_E4_0.4.0` trước khi chạy E4.
 
 - E0 run: `20260929T134557Z_E0_7dc6c237`.
 - E4 run: `20260929T134632Z_E4_3836eed1`.
@@ -33,4 +33,4 @@ ECE/Brier giảm nhưng log loss tăng; cả hai ECE đều vượt tolerance 0,
 
 Trong smoke này, đặc trưng mới không vượt weighted_raw về F1/AUROC/chi phí. Adaptive và SSL cải thiện một số chỉ số so với weighted có đặc trưng mới, nhưng chưa vượt weighted_raw về chi phí. Giữ nguyên toàn bộ kết quả này; không chọn lại cấu hình theo holdout trong đợt kiểm tra tích hợp.
 
-Artifacts gồm model, dự đoán, split, nhãn đã chọn, HTML/CSV TreeSHAP và mô hình calibration có thể nạp lại. Kiểm thử tự động bao gồm TTA và tách ngân sách calibration; lượt smoke trên dữ liệu thật này không bật TTA/hybrid. Chưa chạy ma trận nghiên cứu đầy đủ hai nguồn × ba seed × ba ngân sách, chưa so sánh thực nghiệm DANN, chưa đánh giá FINAL. Vì vậy các số trên xác nhận đường chạy tích hợp, không chứng minh mức tăng 1–5% trong hướng dẫn.
+Artifacts gồm model, dự đoán, split, nhãn đã chọn, HTML/CSV TreeSHAP và mô hình calibration có thể nạp lại. Kiểm thử tự động bao gồm TTA và tách ngân sách calibration; lượt smoke trên dữ liệu thật này không bật TTA/hybrid. Chưa chạy ma trận nghiên cứu đầy đủ hai nguồn × ba seed × ba ngân sách, chưa so sánh thực nghiệm DANN, chưa đánh giá SUPPLEMENTARY. Vì vậy các số trên xác nhận đường chạy tích hợp, không chứng minh mức tăng 1–5% trong hướng dẫn.

@@ -41,6 +41,6 @@ Mỗi lần chạy có snapshot riêng trong `results/runs`, CSV hiện hành �
 
 Hướng dẫn gốc có mục checklist Week 3+: **“Hybrid DANN+XGBoost (nếu cần)”**. Vì vậy giữ code hybrid có sẵn như tùy chọn E8, không đưa vào E4 mặc định, không cần cài torch để chạy E4.
 
-Không sửa `config/E7_final_evaluation.json` hoặc chạy FINAL trong đợt tích hợp này. E7 hiện chỉ tái huấn luyện giao thức cũ, không thể dùng nó để xác nhận kết quả FINAL của model cải tiến. Cần giao thức FINAL phù hợp được khóa trước một đợt đánh giá riêng.
+Không sửa `config/E7_final_evaluation.json` hoặc chạy SUPPLEMENTARY trong đợt tích hợp này. E7 hiện chỉ tái huấn luyện giao thức cũ, không thể dùng nó để xác nhận kết quả SUPPLEMENTARY của model cải tiến. Cần giao thức SUPPLEMENTARY phù hợp được khóa trước một đợt đánh giá riêng.
 
 Mức tăng 1–5% trong hướng dẫn là kỳ vọng, không phải tiêu chí có thể đảm bảo bằng sửa mã. Báo cáo so sánh cần dựa trên CSV thực tế, cùng split và ngân sách.

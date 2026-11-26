@@ -2,7 +2,7 @@
 
 The 60% adaptation pool supplies budgeted labels and unlabeled examples. The
 40% evaluation pool is never passed to fitting, except in explicitly labelled
-transductive TTA variants. FINAL is outside this runner's input contract.
+transductive TTA variants. SUPPLEMENTARY is outside this runner's input contract.
 """
 from __future__ import annotations
 
@@ -361,7 +361,7 @@ def run_improvements(config: dict, data_dir: Path, mapping_path: Path, work: Pat
                            "target_weight_sum": float(weights.sum()) if method == "target_only" else float(weights[len(ys):].sum()),
                            "adaptive_diagnostics": diagnostics, "self_training_history": history, "tta_diagnostics": tta_info,
                            "calibration_info": calibration_info,
-                           "note": "Cost assumptions are user-defined. DEV row split is not verified device/time independence. No FINAL data used."})
+                           "note": "Cost assumptions are user-defined. DEV row split is not verified device/time independence. No SUPPLEMENTARY data used."})
                     if method == "hybrid":
                         model.save(out / "hybrid_model")
                     elif calibrate:
