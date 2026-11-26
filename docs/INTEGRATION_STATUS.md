@@ -4,11 +4,11 @@ Bảy bước đã có đường chạy trong E4. Các đoạn mã trong hướn
 
 | Bước | Triển khai |
 |---|---|
-| Feature engineering | `features.engineer_features`, `prepare.load_and_engineer_features`; E4 mặc định bật `FeatureEngineer` |
+| Feature engineering | `features.engineer_features`, `prepare.load_and_engineer_features`; E4 bật/tắt `FeatureEngineer` theo config |
 | Cost-sensitive metrics | `experiment.metrics_with_cost`/`metrics_cost_sensitive`; giữ API `metrics`, chi phí mặc định FP=100/FN=1 |
 | SHAP | `explanations.export_tree_explanations`; TreeSHAP gốc XGBoost, xuất HTML/CSV, không cần cài thêm `shap` |
 | Adaptive weighting | `fewshot.run_fewshot_improvements` gọi runner chung; E4 nhận `weighted_adaptive`, mặc định uncertainty, có density |
-| TTA | `use_tta: true`, `tta_method: entropy` hoặc `self_training`; thêm hàng đối chiếu với weighted không TTA |
+| TTA | `use_tta: true`, `tta_method: entropy` hoặc `self_training`; chỉ variant có TTA mới là transductive |
 | Calibration | `calibration.calibrate_model`, `calibrate_prefit`, `check_calibration`; E4 có variant `weighted_calibrated` |
 | Semi-supervised | `semisupervised.fit_self_training`; runner dùng cùng lõi `adaptation.self_train` |
 
@@ -35,7 +35,8 @@ Mỗi lần chạy có snapshot riêng trong `results/runs`, CSV hiện hành �
 - `check_calibration` trả ECE, Brier score, log loss và reliability bins. `is_well_calibrated` chỉ là so ECE với tolerance, không phải chứng nhận xác suất đúng.
 - Calibration được bật bằng cấu hình trước khi nhìn holdout. Báo cáo cả kết quả xấu đi; không dùng holdout để quyết định hiệu chỉnh. Tập calibration cân bằng có thể không đại diện tỷ lệ attack triển khai.
 - Để dự đoán lại variant đã calibration, load `calibrated_model.joblib` bằng joblib, áp dụng FeatureEngineer và median trong `run.json`. `model.json` chỉ chứa cây trước calibration. TreeSHAP cũng giải thích cây gốc, không phải toàn bộ phép hiệu chỉnh.
-- Entropy TTA điều chỉnh temperature, không lấy gradient qua cây. Nó giữ thứ hạng và quyết định tại ngưỡng 0,5; không hứa tăng F1/AUROC. Các hàng TTA ghi `transductive_holdout` do dùng đặc trưng holdout để thích nghi; nhãn holdout chỉ dùng tính metric.
+- Self-training thông thường (`method: "self_training"`) chỉ dùng phần adaptation pool chưa gán nhãn; holdout không tham gia huấn luyện và được gán `independent_holdout`. Chỉ variant có `tta != "none"` mới dùng đặc trưng holdout để thích nghi và được gán `transductive_holdout`; điều này áp dụng cả `tta: "self_training"`. Nhãn holdout chỉ dùng tính metric. `independent_holdout` không chứng minh độc lập theo thiết bị, phiên hay thời gian.
+- Entropy TTA điều chỉnh temperature, không lấy gradient qua cây. Nó giữ thứ hạng và quyết định tại ngưỡng 0,5; không hứa tăng F1/AUROC.
 
 ## Hybrid và E7
 

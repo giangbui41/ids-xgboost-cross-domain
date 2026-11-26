@@ -1,6 +1,6 @@
 # Kiểm tra tích hợp E4 0.4.0
 
-Đã chạy `python -m pytest -q`: **98 passed**. Đã chạy E0 trước E4 trên bộ dữ liệu đang có; không chạy E7 hoặc đọc IoT SUPPLEMENTARY. Đã sao lưu kết quả E0 vào `results.backup_before_E4_0.4.0` trước khi chạy E4.
+Tại thời điểm tích hợp ngày 2026-09-29, `python -m pytest -q` cho kết quả **98 passed**. Đây là kết quả lịch sử của lượt kiểm tra đó, không đại diện cho mọi checkout hoặc lần chạy sau. Lần xác minh trong checkout hiện tại ngày 2026-11-26 cho kết quả **92 passed, 6 skipped**. Đã chạy E0 trước E4 trên bộ dữ liệu đang có; không chạy E7 hoặc đọc IoT SUPPLEMENTARY. Đã sao lưu kết quả E0 vào `results.backup_before_E4_0.4.0` trước khi chạy E4.
 
 - E0 run: `20260929T134557Z_E0_7dc6c237`.
 - E4 run: `20260929T134632Z_E4_3836eed1`.
